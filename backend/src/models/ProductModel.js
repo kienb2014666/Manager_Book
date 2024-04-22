@@ -5,11 +5,11 @@ const productSchema = new mongoose.Schema(
     name: { type: String, required: true, unique: true },
     image: { type: String, required: true },
     type: { type: String, required: true },
-    date: {type: Date},
-    author: {type: String},
-    PublisherCode: {type: mongoose.Types.ObjectId, ref: 'Publisher'},
+    pub: {type: mongoose.Types.ObjectId, ref: 'Publisher'},
     price: { type: Number, required: true },
     countInStock: { type: Number, required: true },
+    date: {type: Date},
+    author: {type: String}
   },
   {
     timestamps: true,

@@ -2,9 +2,9 @@ const ProductService = require("../services/ProductService");
 
 const createProduct = async (req, res) => {
   try {
-    const { name, image, type, price, countInStock, author, date } = req.body;
+    const { name, image, type, price, countInStock, author,date, pub } = req.body;
 
-    if (!name || !image || !type || !price || !countInStock, !author, !date) {
+    if (!name || !image || !type || !price || !countInStock || !author || !date || !pub) {
       return res.status(200).json({
         status: "Err",
         message: "The input is required",
@@ -55,21 +55,21 @@ const deleteProduct = async (req, res) => {
     });
   }
 };
-
+// const getAllProduct = async (req, res) => {
+//   try {
+//     const products = await ProductService.getAllProduct();
+//     res.json(products);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// }
 const getAllProduct = async (req, res) => {
   try {
-    const { limit, page, sort, filter } = req.query;
-    const response = await ProductService.getAllProduct(
-      Number(limit) || null,
-      Number(page) || 0,
-      sort,
-      filter
-    );
-    return res.status(200).json(response);
-  } catch (e) {
-    return res.status(404).json({
-      message: e,
-    });
+    const { page, pageSize, sort, filter } = req.query; // Thêm 'sort' và 'filter' vào request query
+    const products = await ProductService.getAllProduct(parseInt(page), parseInt(pageSize), sort, filter); // Thêm 'sort' và 'filter' vào tham số truyền vào hàm
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

@@ -1,6 +1,7 @@
-const PublisherService = require("../services/PublisherService");
+const { create } = require("../models/PublisherModel");
+const Publisher = require("../services/PublisherService");
 
-const createPublisher = async (req, res) => {
+const createPub = async (req, res) => {
   try {
     const { name, address } = req.body;
 
@@ -10,7 +11,7 @@ const createPublisher = async (req, res) => {
         message: "The input is required",
       });
     }
-    const response = await PublisherService.createPublisher(req.body);
+    const response = await Publisher.createPub(req.body);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
@@ -19,17 +20,17 @@ const createPublisher = async (req, res) => {
   }
 };
 
-const updatePublisher = async (req, res) => {
+const updatePub = async (req, res) => {
   try {
-    const PublisherId = req.params.id;
+    const pubId = req.params.id;
     const data = req.body;
-    if (!PublisherId) {
+    if (!pubId) {
       return res.status(200).json({
         status: "Err",
-        message: "The Publisher id is required",
+        message: "The product id is required",
       });
     }
-    const response = await PublisherService.updatePublisher(PublisherId, data);
+    const response = await Publisher.updatePub(pubId, data);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
@@ -38,16 +39,16 @@ const updatePublisher = async (req, res) => {
   }
 };
 
-const deletePublisher = async (req, res) => {
+const deletePub = async (req, res) => {
   try {
-    const PublisherId = req.params.id;
-    if (!PublisherId) {
+    const pubId = req.params.id;
+    if (!pubId) {
       return res.status(200).json({
         status: "Err",
-        message: "The Publisher id is required",
+        message: "The product id is required",
       });
     }
-    const response = await PublisherService.deletePublisher(PublisherId);
+    const response = await Publisher.deletePub(pubId);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
@@ -56,28 +57,37 @@ const deletePublisher = async (req, res) => {
   }
 };
 
-const getAllPublisher = async (req, res) => {
+
+const getAllPub = async (req, res) => {
   try {
-    const { limit, page, sort, filter } = req.query;
-    const response = await PublisherService.getAllPublisher(
-      Number(limit) || null,
-      Number(page) || 0,
-      sort,
-      filter
-    );
-    return res.status(200).json(response);
-  } catch (e) {
-    return res.status(404).json({
-      message: e,
-    });
+    const pubs = await Publisher.getAllPub();
+    res.json(pubs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-};
-
-
+}
+const getDetailsPub = async (req, res) => {
+    try {
+      const pubId = req.params.id;
+      if (!pubId) {
+        return res.status(200).json({
+          status: "Err",
+          message: "The productId is required",
+        });
+      }
+      const response = await Publisher.getdetailsPub(pubId);
+      return res.status(200).json(response);
+    } catch (e) {
+      return res.status(404).json({
+        message: e,
+      });
+    }
+  };
 
 module.exports = {
-  createPublisher,
-  updatePublisher,
-  deletePublisher,
-  getAllPublisher,
+  createPub,
+  updatePub,
+  deletePub,
+  getAllPub,
+  getDetailsPub
 };
